@@ -8,7 +8,7 @@ const ListProduct = () => {
   const [products, setProducts] = React.useState([]);
 
   const fetchProducts = async () => {
-    await axios.get('https://1m61y8i2dk.execute-api.eu-west-2.amazonaws.com/Stage/products')
+    await axios.get('https://am7wpm2yvf.execute-api.eu-west-2.amazonaws.com/Stage/products')
     .then(response => response.data)
     .then((data) => {
       setProducts(data)
@@ -26,7 +26,7 @@ const ListProduct = () => {
   }, []);
 
   const removeProduct = async (id) => {
-    await axios.delete('https://1m61y8i2dk.execute-api.eu-west-2.amazonaws.com/Stage/products/', {id: id})
+    await axios.delete('https://am7wpm2yvf.execute-api.eu-west-2.amazonaws.com/Stage/products/', {id: id})
     .then(() => {
       fetchProducts();
     })

@@ -17,7 +17,7 @@ const AddProduct = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    await axios.post('https://1m61y8i2dk.execute-api.eu-west-2.amazonaws.com/Stage/products', data)
+    await axios.post('https://am7wpm2yvf.execute-api.eu-west-2.amazonaws.com/Stage/products', data)
     .then(response => {
       setSuccessMsg("Product has been saved.");
       reset();
