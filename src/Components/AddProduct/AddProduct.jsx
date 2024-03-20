@@ -52,16 +52,10 @@ const AddProduct = () => {
             <input type="text" {...register("description", {required: "Product Description is required."})}/>
             {errors.description && (<p className="error-message">{errors.description.message}</p>)}
           </div>
-          <div className='addproduct-price'>
-            <div className='addproduct-itemfield'>
-              <p>Price</p>
-              <input type="text" {...register("price", {required: "Product Price is required."})}/>
-              {errors.price && (<p className="error-message">{errors.price.message}</p>)}
-            </div>
-            <div className='addproduct-itemfield'>
-              <p>Now Price</p>
-              <input type="text" {...register("now_price")}/>
-            </div>
+          <div className='addproduct-itemfield'>
+            <p>Price</p>
+            <input type="text" {...register("price", {required: "Product Price is required."})}/>
+            {errors.price && (<p className="error-message">{errors.price.message}</p>)}
           </div>
           <div className='addproduct-itemfield'>
             <p>Product Category</p>
