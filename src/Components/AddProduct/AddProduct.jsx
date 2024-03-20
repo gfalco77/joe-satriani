@@ -39,8 +39,8 @@ const AddProduct = () => {
           {successMsg && <p className="success-message">{successMsg}</p>}
           <div className='addproduct-itemfield'>
             <p>Product Sku</p>
-            <input type="text" {...register("sku", {required: "Product sku is required."})}/>
-            {errors.sku && (<p className="error-message">{errors.sku.message}</p>)}
+            <input type="text" {...register("pk", {required: "Product sku is required."})}/>
+            {errors.pk && (<p className="error-message">{errors.sku.message}</p>)}
           </div>
           <div className='addproduct-itemfield'>
             <p>Product Name</p>
