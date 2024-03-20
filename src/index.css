@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  font-family: Poppins, serif;
+  background-color: #f6f6f6;
+  height: 100vh;
+}
+
+.error-message {
+  color: red;
+  font-style: italic;
+}
+
+.success-message {
+  color: green;
+}
