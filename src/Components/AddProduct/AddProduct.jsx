@@ -45,7 +45,7 @@ const AddProduct = () => {
     setImage(file);
     const formData = new FormData();
     formData.append("file", file);
-    axios.post("https://2mr4q3j422.execute-api.eu-west-2.amazonaws.com/Stage/images/upload", formData)
+    axios.post("https://6fjdbsd1a1.execute-api.eu-west-2.amazonaws.com/Stage/images/upload", formData)
     .then((response) => {
       // handle the response
       console.log(response);
