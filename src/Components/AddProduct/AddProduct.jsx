@@ -1,9 +1,18 @@
-// eslint-disable-next-line no-unused-vars
 import React, {useState} from 'react'
 import './AddProduct.css'
 import {useForm} from "react-hook-form";
 import upload_area from '../../assets/upload_area.svg'
 import axios from 'axios';
+
+const convertToBase64 = async (file) => {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      resolve(reader.result);
+    }
+  })
+}
 
 const AddProduct = () => {
   const [successMsg, setSuccessMsg] = useState("");
@@ -16,8 +25,10 @@ const AddProduct = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    await axios.post('https://am7wpm2yvf.execute-api.eu-west-2.amazonaws.com/Stage/products', data)
+    const formData = new FormData();
+    formData.append('image', data);
+    console.log(formData);
+    await axios.post('https://am7wpm2yvf.execute-api.eu-west-2.amazonaws.com/Stage/products', formData)
     .then(response => {
       setSuccessMsg("Product has been saved.");
       reset();
@@ -29,8 +40,21 @@ const AddProduct = () => {
 
   const [image, setImage] = useState(false);
 
-  const imageHandler = (e) => {
-    setImage(e.target.files[0]);
+  const imageHandler = async (e) => {
+    const file = event.target.files[0];
+    setImage(file);
+    const formData = new FormData();
+    formData.append("file", file);
+    axios.post("https://2mr4q3j422.execute-api.eu-west-2.amazonaws.com/Stage/images/upload", formData)
+    .then((response) => {
+      // handle the response
+      console.log(response);
+    })
+    .catch((error) => {
+      // handle errors
+      console.log(error);
+    });
+
   }
 
   return (
