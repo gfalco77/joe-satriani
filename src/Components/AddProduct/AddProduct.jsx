@@ -4,16 +4,6 @@ import {useForm} from "react-hook-form";
 import upload_area from '../../assets/upload_area.svg'
 import axios from 'axios';
 
-const convertToBase64 = async (file) => {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      resolve(reader.result);
-    }
-  })
-}
-
 const AddProduct = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [serverErrorMsg, setServerErrorMsg] = useState("");
@@ -25,10 +15,28 @@ const AddProduct = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append('image', data);
-    console.log(formData);
-    await axios.post('https://am7wpm2yvf.execute-api.eu-west-2.amazonaws.com/Stage/products', formData)
+
+    const product = Object.assign({}, data);
+
+    console.log(image);
+    // Constructing the JSON payload
+    const requestBody = {
+      input: {
+        product,
+        image: image
+      },
+      name: "Create a Product",
+      stateMachineArn: "arn:aws:states:eu-west-2:730335265680:stateMachine:StateMachineExpressSync-scGctMcHtv9W"
+    };
+
+    axios({
+      method: 'post',
+      url: 'https://0w8h1wwfd8.execute-api.eu-west-2.amazonaws.com/Stage/products/create',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: requestBody
+    })
     .then(response => {
       setSuccessMsg("Product has been saved.");
       reset();
@@ -38,23 +46,11 @@ const AddProduct = () => {
     });
   };
 
-  const [image, setImage] = useState(false);
+  const [image, setImage] = useState(null);
 
   const imageHandler = async (e) => {
     const file = event.target.files[0];
     setImage(file);
-    const formData = new FormData();
-    formData.append("file", file);
-    axios.post("https://6fjdbsd1a1.execute-api.eu-west-2.amazonaws.com/Stage/images/upload", formData)
-    .then((response) => {
-      // handle the response
-      console.log(response);
-    })
-    .catch((error) => {
-      // handle errors
-      console.log(error);
-    });
-
   }
 
   return (
@@ -63,8 +59,8 @@ const AddProduct = () => {
           {successMsg && <p className="success-message">{successMsg}</p>}
           <div className='addproduct-itemfield'>
             <p>Product Sku</p>
-            <input type="text" {...register("PK", {required: "Product sku is required."})}/>
-            {errors.PK && (<p className="error-message">{errors.sku.message}</p>)}
+            <input type="text" {...register("id", {required: "Product sku is required."})}/>
+            {errors.id && (<p className="error-message">{errors.sku.message}</p>)}
           </div>
           <div className='addproduct-itemfield'>
             <p>Product Name</p>
