@@ -3,6 +3,7 @@ import './AddProduct.css'
 import {useForm} from "react-hook-form";
 import upload_area from '../../assets/upload_area.svg'
 import axios from 'axios';
+import {uploadMedia, createProduct, uploadImage} from '../../services/productService.js';
 
 const AddProduct = () => {
   const [successMsg, setSuccessMsg] = useState("");
@@ -16,34 +17,17 @@ const AddProduct = () => {
 
   const onSubmit = async (data) => {
 
-    const product = Object.assign({}, data);
-
-    console.log(image);
-    // Constructing the JSON payload
-    const requestBody = {
-      input: {
-        product,
-        image: image
-      },
-      name: "Create a Product",
-      stateMachineArn: "arn:aws:states:eu-west-2:730335265680:stateMachine:StateMachineExpressSync-scGctMcHtv9W"
-    };
-
-    axios({
-      method: 'post',
-      url: 'https://0w8h1wwfd8.execute-api.eu-west-2.amazonaws.com/Stage/products/create',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: requestBody
-    })
-    .then(response => {
+    try {
+      await Promise.all([
+        uploadMedia(image),
+        createProduct(data, image)
+      ]);
+      // Handle responses as needed
       setSuccessMsg("Product has been saved.");
       reset();
-    })
-    .catch(error => {
+    } catch (error) {
       setServerErrorMsg(error.message);
-    });
+    }
   };
 
   const [image, setImage] = useState(null);
