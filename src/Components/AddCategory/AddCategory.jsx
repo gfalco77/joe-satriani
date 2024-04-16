@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import './AddCategory.css'
 import {useForm} from "react-hook-form";
 import upload_area from '../../assets/upload_area.svg'
-import axios from 'axios';
+import {createCategory, uploadMedia} from "../../services/productService.js";
 
 const AddCategory = () => {
   const [successMsg, setSuccessMsg] = useState("");
@@ -15,15 +15,17 @@ const AddCategory = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    await axios.post('https://am7wpm2yvf.execute-api.eu-west-2.amazonaws.com/Stage/products', data)
-    .then(response => {
-      setSuccessMsg("Product has been saved.");
+    try {
+      await Promise.all([
+        uploadMedia(image),
+        createCategory(data, image.name)
+      ]);
+      // Handle responses as needed
+      setSuccessMsg("Category has been saved.");
       reset();
-    })
-    .catch(error => {
+    } catch (error) {
       setServerErrorMsg(error.message);
-    });
+    }
   };
 
   const [image, setImage] = useState(false);
@@ -37,12 +39,12 @@ const AddCategory = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           {successMsg && <p className="success-message">{successMsg}</p>}
           <div className='add-category-itemfield'>
-            <p>Product Name</p>
+            <p>Category Name</p>
             <input type="text" {...register("name", {required: "Category Name is required."})}/>
             {errors.name && (<p className="error-message">{errors.name.message}</p>)}
           </div>
           <div className='add-category-itemfield'>
-            <p>Product Description</p>
+            <p>Category Description</p>
             <input type="text" {...register("description", {required: "Category Description is required."})}/>
             {errors.description && (<p className="error-message">{errors.description.message}</p>)}
           </div>

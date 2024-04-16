@@ -8,7 +8,7 @@ const ListProduct = () => {
   const [products, setProducts] = React.useState([]);
 
   const fetchProducts = async () => {
-    await axios.get('https://am7wpm2yvf.execute-api.eu-west-2.amazonaws.com/Stage/products')
+    await axios.get('https://0w8h1wwfd8.execute-api.eu-west-2.amazonaws.com/Stage/products')
     .then(response => response.data)
     .then((data) => {
       setProducts(data)
@@ -26,7 +26,7 @@ const ListProduct = () => {
   }, []);
 
   const removeProduct = async (id) => {
-    await axios.delete('https://am7wpm2yvf.execute-api.eu-west-2.amazonaws.com/Stage/products/', {id: id})
+    await axios.delete('https://0w8h1wwfd8.execute-api.eu-west-2.amazonaws.com/Stage/products/', {id: id})
     .then(() => {
       fetchProducts();
     })
@@ -36,34 +36,43 @@ const ListProduct = () => {
     });
   }
 
+  // Function to find the carousel image URL for a given product
+  const findCarouselImageUrl = (product) => {
+    // Check if product and productImages are defined
+    if (product && product.images) {
+      // Find the carousel image in the productImages array
+      const image = product.images.find(image => image && image.type === 'thumbnail');
+      // Return the URL if carouselImage is defined, otherwise return null
+      return image ? 'https://dh3ia0klkutsh.cloudfront.net/' + image.url : null;
+    }
+    return null; // Return null if product or productImages are undefined
+  };
+
   return (
       <div className='list-product'>
         <h1>Products</h1>
         <div className='listproduct-format-main'>
-          <p>Products</p>
-          <p>Title</p>
-          <p>Was Price</p>
-          <p>Now Price</p>
-          <p>Category</p>
-          <p>Remove</p>
+          <p><b>Image</b></p>
+          <p><b>Name</b></p>
+          <p><b>Price</b></p>
+          <p><b>Category</b></p>
+          <p><b>Remove</b></p>
         </div>
-        <div className='listproduct-allproducts'>
-          <hr/>
-          {products.map((product) => {
-            return (
-                <div className='listproduct-format-main listproduct-format' key={product.PK}>
-                  <img src={product.image} alt="" className='listproduct-product-img'/>
-                  <p>{product.name}</p>
-                  <p>£{product.was_price}</p>
-                  <p>£{product.now_price}</p>
-                  <p>£{product.category}</p>
-                  <img onClick={() => {
-                    removeProduct(product.PK)
-                  }} src={remove_icon} alt="" className='listproduct-remove-icon'/>
-                </div>
-            )
-          })}
-        </div>
+        <hr/>
+        {products.map((product) => {
+          return (
+              <div className='listproduct-format-main listproduct-format' key={product.PK}>
+                <img src={findCarouselImageUrl(product)} alt="Carousel" className='listproduct-product-img'/>
+                {/*<img src={carouselImageUrl} alt="" className='listproduct-product-img'/>*/}
+                <p>{product.name}</p>
+                <p>£{product.price}</p>
+                <p>{product.SK.replace('CATEGORY#', '')}</p>
+                <img onClick={() => {
+                  removeProduct(product.PK)
+                }} src={remove_icon} alt="" className='listproduct-remove-icon'/>
+              </div>
+          )
+        })}
       </div>
   )
 }
